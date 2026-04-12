@@ -1,0 +1,44 @@
+{
+  "umbrales_decision": {
+    "sospechoso_min": 31,
+    "malicioso_min": 71
+  },
+  "reglas": [
+    {
+      "id_regla": "H1",
+      "categoria": "Metadatos",
+      "peso_asignado": 40,
+      "descripcion": "Inconsistencia de dominio (From vs Return-Path)"
+    },
+    {
+      "id_regla": "H2",
+      "categoria": "Metadatos",
+      "peso_asignado": 30,
+      "descripcion": "Fallo en autenticacion SPF o DKIM"
+    },
+    {
+      "id_regla": "U1",
+      "categoria": "Enlaces",
+      "peso_asignado": 45,
+      "descripcion": "URL contiene direccion IP ofuscada"
+    },
+    {
+      "id_regla": "U2",
+      "categoria": "Enlaces",
+      "peso_asignado": 35,
+      "descripcion": "Discrepancia entre enlace visible y destino real"
+    },
+    {
+      "id_regla": "S1",
+      "categoria": "Semantica",
+      "peso_asignado": 25,
+      "descripcion": "Cuerpo del mensaje contiene sentido de urgencia"
+    },
+    {
+      "id_regla": "A1",
+      "categoria": "Adjuntos",
+      "peso_asignado": 50,
+      "descripcion": "Archivo adjunto con extension peligrosa (.exe, .bat)"
+    }
+  ]
+}

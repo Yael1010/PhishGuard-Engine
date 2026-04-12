@@ -1,0 +1,16 @@
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Archivos compilados de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de prueba subidos por el usuario (Opcional pero recomendado para privacidad)
+data/*.eml

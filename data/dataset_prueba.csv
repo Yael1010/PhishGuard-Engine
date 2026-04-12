@@ -1,0 +1,5 @@
+id,from_domain,return_path,spf,dkim,texto_enlace,destino_enlace,cuerpo_mensaje,adjunto
+1,uaeh.edu.mx,uaeh.edu.mx,Aprobado,Aprobado,Portal Alumnos,https://uaeh.edu.mx/login,Hola. Revisa tus calificaciones semestrales.,.pdf
+2,paypal.com,hacker-ruso.com,Fallo,Fallo,Verificar Cuenta,http://192.168.1.99/login,URGENTE: Su cuenta ha sido suspendida. Accion requerida.,.zip
+3,amazon.com,amazon.com,Aprobado,Aprobado,Rastrear Paquete,http://bit.ly/track392,Tu paquete esta en camino.,.png
+4,admin@empresa.com,admin@empresa.com,Aprobado,Aprobado,Factura,http://facturas.com/doc,Estimado cliente adjunto su factura.,.exe
