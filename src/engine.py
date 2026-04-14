@@ -76,16 +76,27 @@ class MotorInferencia:
         )
 
     def _clasificar_riesgo(self, memoria):
-        """Aplica los umbrales de decisión para dar el veredicto final."""
-        # Topes Heurísticos: Normalización a 100 máximo
+        """Aplica los umbrales de decisión y deduce el tipo de amenaza."""
         if memoria.puntaje_riesgo > 100:
             memoria.puntaje_riesgo = 100
 
         score = memoria.puntaje_riesgo
         
-        if score >= self.umbrales["malicioso_min"]: # Mayor o igual a 71
+        # LÓGICA DE DEDUCCIÓN (Spam vs Phishing)
+        # Si se activó alguna de estas reglas, hay intención de engaño o malware
+        reglas_phishing = ["U1", "U2", "S1", "A1"]
+        ids_activados = [log["regla"] for log in memoria.reglas_activadas]
+        tiene_phishing = any(r in ids_activados for r in reglas_phishing)
+
+        # Clasificación Final
+        if score >= self.umbrales["malicioso_min"]: # >= 71
             memoria.clasificacion_final = "Malicioso"
-        elif score >= self.umbrales["sospechoso_min"]: # Mayor o igual a 31
+            memoria.tipo_amenaza = "Phishing" if tiene_phishing else "Spam Severo"
+            
+        elif score >= self.umbrales["sospechoso_min"]: # >= 31
             memoria.clasificacion_final = "Sospechoso"
-        else:
+            memoria.tipo_amenaza = "Phishing" if tiene_phishing else "Spam"
+            
+        else: # < 31
             memoria.clasificacion_final = "Legítimo"
+            memoria.tipo_amenaza = "Ninguna"

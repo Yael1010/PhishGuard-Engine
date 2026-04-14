@@ -21,10 +21,9 @@ def index():
     resultados_manual = None
     resultados_masivos = None
     estadisticas = None
-    hechos_extraidos = None # Para mostrarle al usuario qué leyó el sistema del EML
+    hechos_extraidos = None
     
     if request.method == 'POST':
-        # CASO 1: Subida de CSV (Masivo)
         if 'archivo_csv' in request.files and request.files['archivo_csv'].filename != '':
             archivo = request.files['archivo_csv']
             try:
@@ -46,13 +45,13 @@ def index():
                         'remitente': hechos['dominio_remitente'],
                         'asunto': fila.get('texto_enlace', 'Sin asunto'),
                         'clasificacion': clasificacion,
+                        'tipo_amenaza': memoria.tipo_amenaza, # <-- NUEVA ETIQUETA
                         'score': memoria.puntaje_riesgo,
                         'reglas': [log['regla'] for log in memoria.reglas_activadas]
                     })
             except Exception as e:
                 print(f"Error procesando CSV: {e}")
 
-        # CASO 2: Subida de correo real .EML (Individual)
         elif 'archivo_eml' in request.files and request.files['archivo_eml'].filename != '':
             archivo = request.files['archivo_eml']
             hechos = extractor.extraer_hechos_de_eml(archivo)
@@ -65,8 +64,8 @@ def index():
 
                 resultados_manual = memoria.obtener_estado_actual()
                 resultados_manual['clasificacion'] = memoria.clasificacion_final
+                resultados_manual['tipo_amenaza'] = memoria.tipo_amenaza # <-- NUEVA ETIQUETA
 
-        # CASO 3: Formulario Manual (Escrito a mano)
         elif 'dominio_remitente' in request.form:
             correo_simulado = {
                 "dominio_remitente": request.form.get('dominio_remitente', ''),
@@ -87,6 +86,7 @@ def index():
 
             resultados_manual = memoria.obtener_estado_actual()
             resultados_manual['clasificacion'] = memoria.clasificacion_final
+            resultados_manual['tipo_amenaza'] = memoria.tipo_amenaza # <-- NUEVA ETIQUETA
 
     return render_template('index.html', 
                            resultados_manual=resultados_manual, 
@@ -95,5 +95,4 @@ def index():
                            hechos=hechos_extraidos)
 
 if __name__ == '__main__':
-    print("Iniciando Dashboard de PhishGuard en http://127.0.0.1:5000")
     app.run(debug=True, port=5000)
