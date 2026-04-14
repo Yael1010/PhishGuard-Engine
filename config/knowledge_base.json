@@ -29,16 +29,34 @@
       "descripcion": "Discrepancia entre enlace visible y destino real"
     },
     {
+      "id_regla": "U3",
+      "categoria": "Enlaces",
+      "peso_asignado": 20,
+      "descripcion": "Uso de acortadores de URL sospechosos"
+    },
+    {
       "id_regla": "S1",
       "categoria": "Semantica",
       "peso_asignado": 25,
-      "descripcion": "Cuerpo del mensaje contiene sentido de urgencia"
+      "descripcion": "Cuerpo del mensaje contiene sentido de urgencia o amenaza"
+    },
+    {
+      "id_regla": "S2",
+      "categoria": "Semantica",
+      "peso_asignado": 15,
+      "descripcion": "Falta de personalizacion (saludos genericos)"
     },
     {
       "id_regla": "A1",
       "categoria": "Adjuntos",
       "peso_asignado": 50,
       "descripcion": "Archivo adjunto con extension peligrosa (.exe, .bat)"
+    },
+    {
+      "id_regla": "A2",
+      "categoria": "Adjuntos",
+      "peso_asignado": 30,
+      "descripcion": "Archivo adjunto comprimido (.zip, .rar)"
     }
   ]
 }
