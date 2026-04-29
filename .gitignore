@@ -14,3 +14,5 @@ Thumbs.db
 
 # Ignorar archivos de prueba subidos por el usuario (Opcional pero recomendado para privacidad)
 data/*.eml
+
+.env
