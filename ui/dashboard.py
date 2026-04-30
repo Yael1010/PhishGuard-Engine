@@ -4,6 +4,7 @@ import io
 import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 import uvicorn
 
 # Configuración de rutas
@@ -26,6 +27,17 @@ ruta_kb = os.path.join(directorio_base, 'config', 'knowledge_base.json')
 motor = MotorInferencia(ruta_kb=ruta_kb)
 extractor = ExtractorMasivo()
 db = SupabaseManager()
+
+# Definición de la estructura de datos para la API externa
+class CorreoRequest(BaseModel):
+    dominio_remitente: str
+    dominio_ruta_retorno: str
+    estado_SPF: str = "Aprobado"
+    estado_DKIM: str = "Aprobado"
+    enlaces: list = []
+    texto_enlace: str = ""
+    cuerpo_mensaje: str = ""
+    extension_adjunto: str = ""
 
 @app.get("/")
 async def index_get(request: Request):
@@ -162,6 +174,42 @@ async def index_post(request: Request):
             "hechos": hechos_extraidos
         }
     )
+
+@app.post("/api/v1/analizar", tags=["API Externa"])
+async def api_analizar_correo(datos: CorreoRequest):
+    """Endpoint para consumo desde aplicaciones externas (Ej. App móvil en Flutter)"""
+    hechos = {
+        "dominio_remitente": datos.dominio_remitente.lower(),
+        "dominio_ruta_retorno": datos.dominio_ruta_retorno.lower(),
+        "estado_SPF": datos.estado_SPF,
+        "estado_DKIM": datos.estado_DKIM,
+        "lista_enlaces_URL": datos.enlaces,
+        "texto_visible_enlace": datos.texto_enlace,
+        "destino_real_enlace": datos.enlaces[0] if datos.enlaces else "",
+        "cuerpo_mensaje": datos.cuerpo_mensaje,
+        "extension_adjunto": datos.extension_adjunto.lower()
+    }
+
+    memoria = MemoriaDeTrabajo()
+    memoria.cargar_hechos(hechos)
+    motor.ejecutar_forward_chaining(memoria)
+
+    # Guardar la petición de la API en la nube para las estadísticas globales
+    db.guardar_registro(
+        remitente=hechos['dominio_remitente'],
+        score=memoria.puntaje_riesgo,
+        clasificacion=memoria.clasificacion_final,
+        tipo_amenaza=memoria.tipo_amenaza,
+        reglas=[log['regla'] for log in memoria.reglas_activadas]
+    )
+
+    # La API responde con JSON puro en lugar de un archivo HTML
+    return {
+        "status": "success",
+        "resultados_heuristica": memoria.obtener_estado_actual(),
+        "clasificacion": memoria.clasificacion_final,
+        "tipo_amenaza": memoria.tipo_amenaza
+    }
 
 if __name__ == '__main__':
     # Uvicorn reemplaza al servidor de pruebas de Flask
