@@ -8,7 +8,7 @@ phishguard_project/
 │   ├── main.py         # API principal
 │   ├── src/            # Módulos del motor heurístico
 │   ├── requirements.txt
-│   └── .env.example    # Ejemplo de variables de entorno
+│   └── .env            # Variables de entorno
 │
 ├── frontend/           # Frontend Next.js
 │   ├── src/
@@ -29,7 +29,7 @@ phishguard_project/
 
 - Python 3.9+
 - Node.js 18+
-- Cuenta de Supabase
+- Cuenta de Supabase (ya configurada)
 
 ## Instalación
 
@@ -37,8 +37,6 @@ phishguard_project/
 
 ```bash
 cd api
-cp .env.example .env
-# Edita .env con tus credenciales de Supabase
 pip install -r requirements.txt
 python main.py
 ```
@@ -59,8 +57,8 @@ El frontend estará disponible en `http://localhost:3000`
 
 ### Backend (api/.env)
 ```
-SUPABASE_URL=tu_url_de_supabase
-SUPABASE_KEY=tu_key_de_supabase
+SUPABASE_URL=https://zytpihaxzyuvucgkwrsp.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ### Frontend (frontend/.env.local)
@@ -70,34 +68,25 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ## Despliegue en Vercel
 
-### Preparación del repositorio
+### Opción 1: Backend y Frontend separados
 
-1. Sube este proyecto a GitHub
-2. Crea dos proyectos en Vercel (uno para backend, uno para frontend)
-
-### Backend (FastAPI)
-
-1. Importa el repositorio en Vercel
-2. Configura:
-   - Framework Preset: Other
+**Backend (FastAPI):**
+1. Crear un proyecto en Vercel
+2. Conectar el repositorio
+3. Configurar:
    - Build Command: `pip install -r requirements.txt`
    - Output Directory: `api`
    - Install Command: `pip install -r requirements.txt`
-3. En Environment Variables agrega:
-   - `SUPABASE_URL` - Tu URL de Supabase
-   - `SUPABASE_KEY` - Tu key de Supabase
 
-### Frontend (Next.js)
+**Frontend (Next.js):**
+1. Crear otro proyecto en Vercel
+2. Conectar la carpeta `frontend`
+3. En Settings > Environment Variables agregar:
+   - `NEXT_PUBLIC_API_URL` = URL del backend desplegado
 
-1. Importa el repositorio en Vercel
-2. Configura:
-   - Framework Preset: Next.js
-3. En Environment Variables agrega:
-   - `NEXT_PUBLIC_API_URL` - URL del backend desplegado (ej: https://tu-api.vercel.app)
+### Opción 2: Usar API Routes de Next.js
 
-### Opción alternativa: un solo proyecto
-
-Si prefieres un solo proyecto, puedes usar API Routes de Next.js para el backend.
+Si prefieres un solo proyecto, puedes mover la lógica de FastAPI a Next.js API Routes.
 
 ## Endpoints de la API
 
@@ -118,7 +107,6 @@ Si prefieres un solo proyecto, puedes usar API Routes de Next.js para el backend
 ## Funcionalidades Implementadas
 
 ### Frontend
-- Dashboard con sidebar de navegación
 - Gráfico de barras (últimos 7 días)
 - Mapa de calor de reglas
 - Estadísticas en tiempo real
@@ -127,6 +115,8 @@ Si prefieres un solo proyecto, puedes usar API Routes de Next.js para el backend
 - Descarga de reportes PDF
 - Historial con filtros
 - Toast notifications
+- Skeleton loaders
+- Tooltips en reglas heurísticas
 - Modo oscuro/claro
 
 ### Backend
