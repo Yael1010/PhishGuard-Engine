@@ -104,7 +104,26 @@ export default function EMLPage() {
                   <span className="font-bold">{resultado.clasificacion}</span>
                   <span className="text-sm text-gray-500">({resultado.tipo_amenaza})</span>
                 </div>
-                <p className="text-3xl font-bold">{resultado.resultados_heuristica?.score_actual}/100</p>
+                <p className="text-3xl font-bold">{resultado.resultados?.score_actual}/100</p>
+              </div>
+
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                  <h3 className="font-semibold">Reglas Activadas</h3>
+                </div>
+                <div className="p-4 space-y-2">
+                  {resultado.resultados?.reglas_disparadas?.length ? (
+                    resultado.resultados.reglas_disparadas.map((log: any, idx: number) => (
+                      <div key={idx} className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                        <span className="font-mono font-bold">{log.regla}</span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{log.detalle}</span>
+                        <span className="bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded">+{log.peso_sumado} pts</span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-center py-2">Sin reglas activadas</p>
+                  )}
+                </div>
               </div>
 
               <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">

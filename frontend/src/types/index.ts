@@ -61,6 +61,7 @@ export interface AnalisisRequest {
 export interface AnalisisResponse {
   status: string;
   resultados_heuristica?: ResultadoAnalisis;
+  resultados?: ResultadoAnalisis;
   clasificacion: string;
   tipo_amenaza: string;
   hechos?: Record<string, unknown>;

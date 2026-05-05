@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Shield, Search, AlertTriangle, CheckCircle, AlertCircle, ArrowLeft, Save } from 'lucide-react';
 import { phishGuardApi } from '@/services/api';
 import { ToastContainer, useToast } from '@/components/Toast';
@@ -24,9 +24,9 @@ export default function AnalisisPage() {
     extension_adjunto: '.exe',
   });
 
-  useState(() => {
+  useEffect(() => {
     phishGuardApi.getReglas().then(data => setReglas(data.reglas));
-  });
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -164,7 +164,7 @@ export default function AnalisisPage() {
                     <p className="text-sm opacity-80">{resultado.tipo_amenaza}</p>
                   </div>
                   <div className="ml-auto text-right">
-                    <p className="text-2xl font-bold">{resultado.resultados_heuristica?.score_actual}</p>
+                    <p className="text-2xl font-bold">{resultado.resultados?.score_actual}</p>
                     <p className="text-xs opacity-70">/ 100 puntos</p>
                   </div>
                 </div>
@@ -175,8 +175,8 @@ export default function AnalisisPage() {
                   <h3 className="font-semibold text-gray-900 dark:text-white">Reglas Activadas</h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  {resultado.resultados_heuristica?.reglas_disparadas?.length ? (
-                    resultado.resultados_heuristica.reglas_disparadas.map((log, idx) => (
+                  {resultado.resultados?.reglas_disparadas?.length ? (
+                    resultado.resultados.reglas_disparadas.map((log: any, idx: number) => (
                       <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                         <div>
                           <span className="font-mono font-bold text-gray-900 dark:text-white">{log.regla}</span>
