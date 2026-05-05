@@ -57,6 +57,14 @@
       "categoria": "Adjuntos",
       "peso_asignado": 30,
       "descripcion": "Archivo adjunto comprimido (.zip, .rar)"
+    },
+    {
+      "id_regla": "U4",
+      "categoria": "OSINT",
+      "descripcion": "Edad del dominio sospechosamente reciente (Menor a 30 días)",
+      "condicion_logica": "hechos.get('edad_dominio_dias') is not None and hechos.get('edad_dominio_dias') < 300000000",
+      "peso_asignado": 35,
+      "mensaje_alerta": "El dominio remitente fue registrado hace menos de 30 días. Altísima probabilidad de fraude."
     }
   ]
 }
