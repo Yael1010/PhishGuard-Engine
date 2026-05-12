@@ -36,7 +36,6 @@ def analizar_lote(ruta_csv):
         memoria = MemoriaDeTrabajo()
         memoria.cargar_hechos(hechos)
         
-        # C) Ejecutamos inferencia
         motor.ejecutar_forward_chaining(memoria)
         
         # D) Guardamos el resultado
